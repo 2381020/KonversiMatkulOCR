@@ -12,3 +12,8 @@ export interface KonversiHasil {
   total_bobot: number;
   ipk: number;
 }
+
+export interface User {
+  name: string;
+  role: 'mahasiswa' | 'dosen' | 'admin';
+}
