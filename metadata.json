@@ -1,0 +1,7 @@
+{
+  "name": "Sistem Konversi Nilai Matakuliah",
+  "description": "Aplikasi web untuk mengonversi nilai transkrip akademik menggunakan OCR dan AI. Unggah foto transkrip Anda untuk mendapatkan analisis dan perhitungan IPK secara otomatis.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
