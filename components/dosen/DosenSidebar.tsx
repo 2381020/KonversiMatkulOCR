@@ -1,29 +1,32 @@
-import React from 'react';
-import type { ActiveView } from '../pages/DashboardPage';
 
-interface SidebarProps {
-  activeView: ActiveView;
-  onNavigate: (view: ActiveView) => void;
+import React from 'react';
+
+export type DosenActiveView = 'review' | 'archive';
+
+interface DosenSidebarProps {
+  activeView: DosenActiveView;
+  onNavigate: (view: DosenActiveView) => void;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const HomeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+const ReviewIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    </svg>
 );
-const DocumentPlusIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-);
-const ClockIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+const ArchiveIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+    </svg>
 );
 
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, isOpen, onClose }) => {
+export const DosenSidebar: React.FC<DosenSidebarProps> = ({ activeView, onNavigate, isOpen, onClose }) => {
   const navItems = [
-    { id: 'home', label: 'Home', icon: <HomeIcon /> },
-    { id: 'request', label: 'Ajukan Konversi', icon: <DocumentPlusIcon /> },
-    { id: 'history', label: 'Riwayat Konversi', icon: <ClockIcon /> },
+    { id: 'review', label: 'Review Pengajuan', icon: <ReviewIcon /> },
+    { id: 'archive', label: 'Arsip Konversi', icon: <ArchiveIcon /> },
   ];
   
   return (
@@ -37,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, isOpen
         <aside className={`w-64 bg-white flex-shrink-0 border-r border-slate-200 flex flex-col fixed inset-y-0 left-0 z-30 transform transition-transform duration-300 ease-in-out md:static md:transform-none ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
            <div className="h-16 flex items-center justify-between border-b border-slate-200 px-4">
                <div className="flex items-center space-x-2">
-                 <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
+                 <h1 className="text-xl font-bold text-slate-800">Dosen</h1>
                </div>
                <button onClick={onClose} className="md:hidden p-2 text-slate-500 hover:text-indigo-600">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -50,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, isOpen
                    {navItems.map(item => (
                        <li key={item.id}>
                            <button 
-                               onClick={() => onNavigate(item.id as ActiveView)}
+                               onClick={() => onNavigate(item.id as DosenActiveView)}
                                className={`w-full flex items-center gap-3 px-4 py-3 my-1 rounded-lg text-sm font-medium transition-colors ${
                                    activeView === item.id 
                                    ? 'bg-indigo-100 text-indigo-700' 

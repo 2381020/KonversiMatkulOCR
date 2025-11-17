@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
+import type { User } from '../types';
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onLogin: (role: User['role']) => void;
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
@@ -13,10 +15,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // TODO: Implementasikan logika otentikasi yang sebenarnya di sini (misalnya, panggilan API ke backend)
-    // Untuk sekarang, kita simulasikan jeda 2 detik
+    // Simulasi jeda untuk panggilan API
     setTimeout(() => {
-      onLogin();
+      // Logika sederhana untuk membedakan peran berdasarkan kredensial
+      if (email.toLowerCase() === 'dosen@example.com' && password === 'password') {
+        onLogin('dosen');
+      } else {
+        onLogin('mahasiswa');
+      }
       setIsLoading(false);
     }, 1500);
   };
@@ -53,6 +59,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="mahasiswa@example.com"
                   className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
@@ -71,9 +78,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Gunakan password apa saja"
                   className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
+              <p className="mt-2 text-xs text-slate-500">
+                Login sebagai dosen? Gunakan <span className="font-mono bg-slate-100 px-1 rounded">dosen@example.com</span> & pass: <span className="font-mono bg-slate-100 px-1 rounded">password</span>
+               </p>
             </div>
 
             <div>

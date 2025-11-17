@@ -1,4 +1,6 @@
+
 import React from 'react';
+import { StatusBadge } from '../../components/StatusBadge';
 
 const mockHistory = [
     { id: 'CONV-001', date: '2024-07-15', courses: 45, status: 'Disetujui' },
@@ -6,17 +8,6 @@ const mockHistory = [
     { id: 'CONV-003', date: '2024-08-20', courses: 52, status: 'Pending' },
     { id: 'CONV-004', date: '2023-12-10', courses: 38, status: 'Disetujui' },
 ];
-
-const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
-    const baseClasses = "px-3 py-1 text-xs font-medium rounded-full inline-block";
-    const statusClasses = {
-        Disetujui: "bg-green-100 text-green-800",
-        Ditolak: "bg-red-100 text-red-800",
-        Pending: "bg-yellow-100 text-yellow-800",
-    };
-    const className = `${baseClasses} ${statusClasses[status as keyof typeof statusClasses] || 'bg-slate-100 text-slate-800'}`;
-    return <span className={className}>{status}</span>;
-};
 
 export const ConversionHistoryPage: React.FC = () => {
   return (

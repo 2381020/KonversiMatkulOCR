@@ -17,3 +17,12 @@ export interface User {
   name: string;
   role: 'mahasiswa' | 'dosen' | 'admin';
 }
+
+export interface Submission {
+  id: string;
+  studentName: string;
+  date: string;
+  courses: number;
+  status: 'Pending' | 'Disetujui' | 'Ditolak';
+  detail: KonversiHasil;
+}
