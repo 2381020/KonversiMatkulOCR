@@ -11,9 +11,9 @@ const App: React.FC = () => {
   // Fungsi ini akan dipanggil oleh LoginPage setelah login berhasil
   const handleLogin = (role: User['role']) => {
     if (role === 'dosen') {
-      setUser({ name: 'Dr. Amelia Sari', role: 'dosen' });
+      setUser({ name: 'Sir Jay Sihotang', role: 'dosen' });
     } else {
-      setUser({ name: 'Budi Santoso', role: 'mahasiswa' });
+      setUser({ name: 'Andrew Simbolon', role: 'mahasiswa' });
     }
   };
   
