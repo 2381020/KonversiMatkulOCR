@@ -15,7 +15,7 @@ export interface KonversiHasil {
 
 export interface User {
   name: string;
-  role: 'mahasiswa' | 'dosen' | 'admin';
+  role: 'mahasiswa' | 'kaprodi' | 'dekan' | 'baa';
 }
 
 export interface Submission {

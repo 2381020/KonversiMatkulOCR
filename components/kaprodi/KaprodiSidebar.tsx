@@ -1,10 +1,10 @@
 import React from "react";
 
-export type DosenActiveView = "review" | "archive";
+export type KaprodiActiveView = "review" | "archive";
 
-interface DosenSidebarProps {
-  activeView: DosenActiveView;
-  onNavigate: (view: DosenActiveView) => void;
+interface KaprodiSidebarProps {
+  activeView: KaprodiActiveView;
+  onNavigate: (view: KaprodiActiveView) => void;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -47,7 +47,7 @@ const ArchiveIcon = () => (
   </svg>
 );
 
-export const DosenSidebar: React.FC<DosenSidebarProps> = ({
+export const KaprodiSidebar: React.FC<KaprodiSidebarProps> = ({
   activeView,
   onNavigate,
   isOpen,
@@ -60,7 +60,6 @@ export const DosenSidebar: React.FC<DosenSidebarProps> = ({
 
   return (
     <>
-      {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-20 transition-opacity md:hidden ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -89,7 +88,7 @@ export const DosenSidebar: React.FC<DosenSidebarProps> = ({
 
           <button
             onClick={onClose}
-            className="md:hidden p-2 text-slate-500 hover:text-indigo-600"
+            className="md:hidden p-2 text-slate-500 hover:text-blue-600"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -112,10 +111,10 @@ export const DosenSidebar: React.FC<DosenSidebarProps> = ({
             {navItems.map((item) => (
               <li key={item.id}>
                 <button
-                  onClick={() => onNavigate(item.id as DosenActiveView)}
+                  onClick={() => onNavigate(item.id as KaprodiActiveView)}
                   className={`w-full flex items-center gap-3 px-4 py-3 my-1 rounded-lg text-sm font-medium transition-colors ${
                     activeView === item.id
-                      ? "bg-indigo-100 text-indigo-700"
+                      ? "bg-blue-100 text-blue-700"
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >

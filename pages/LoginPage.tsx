@@ -1,36 +1,38 @@
 import React, { useState } from "react";
-import type { User } from "../types";
+import { useAuth } from "../contexts/AuthContext";
+import type { Profile } from "../lib/supabase";
 
-interface LoginPageProps {
-  onLogin: (role: User["role"]) => void;
-}
-
-export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+export const LoginPage: React.FC = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [role, setRole] = useState<Profile['role']>('mahasiswa');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signIn, signUp } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
-    // Simulasi jeda untuk panggilan API
-    setTimeout(() => {
-      // Logika sederhana untuk membedakan peran berdasarkan kredensial
-      if (
-        email.toLowerCase() === "dosen@example.com" &&
-        password === "password"
-      ) {
-        onLogin("dosen");
+    try {
+      if (isSignUp) {
+        await signUp(email, password, fullName, role);
+        alert('Akun berhasil dibuat! Silakan login.');
+        setIsSignUp(false);
+        setFullName('');
+        setRole('mahasiswa');
       } else {
-        onLogin("mahasiswa");
+        await signIn(email, password);
       }
+    } catch (err: any) {
+      setError(err.message || 'Terjadi kesalahan. Silakan coba lagi.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
-  };
-
-  const handleCreateAccountClick = () => {
-    alert('Fitur "Buat Akun" sedang dalam pengembangan.');
+    }
   };
 
   return (
@@ -58,7 +60,86 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             <p className="text-slate-500">Sistem Konversi Nilai Matakuliah</p>
           </div>
 
+          <div className="flex gap-2 mb-6">
+            <button
+              type="button"
+              onClick={() => setIsSignUp(false)}
+              className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
+                !isSignUp
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsSignUp(true)}
+              className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
+                isSignUp
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              Daftar
+            </button>
+          </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
+            {isSignUp && (
+              <>
+                <div>
+                  <label
+                    htmlFor="fullName"
+                    className="block text-sm font-medium text-slate-700"
+                  >
+                    Nama Lengkap
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="John Doe"
+                      className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="role"
+                    className="block text-sm font-medium text-slate-700"
+                  >
+                    Role
+                  </label>
+                  <div className="mt-1">
+                    <select
+                      id="role"
+                      name="role"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value as Profile['role'])}
+                      className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    >
+                      <option value="mahasiswa">Mahasiswa</option>
+                      <option value="kaprodi">Kaprodi</option>
+                      <option value="dekan">Dekan</option>
+                      <option value="baa">BAA</option>
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
+
             <div>
               <label
                 htmlFor="email"
@@ -75,8 +156,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="mahasiswa@example.com"
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="user@example.com"
+                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -97,44 +178,22 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Gunakan password apa saja"
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder={isSignUp ? "Minimal 6 karakter" : "Masukkan password"}
+                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
-              <p className="mt-2 text-xs text-slate-500">
-                Login sebagai dosen? Gunakan{" "}
-                <span className="font-mono bg-slate-100 px-1 rounded">
-                  dosen@example.com
-                </span>{" "}
-                & pass:{" "}
-                <span className="font-mono bg-slate-100 px-1 rounded">
-                  password
-                </span>
-              </p>
             </div>
 
             <div>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Memproses..." : "Login"}
+                {isLoading ? "Memproses..." : (isSignUp ? "Daftar" : "Login")}
               </button>
             </div>
           </form>
-
-          <div className="mt-6 text-center" />
-          {/* <p className="text-sm text-slate-600">
-              Belum punya akun?{" "}
-              <button
-                onClick={handleCreateAccountClick}
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Buat Akun
-              </button>
-            </p>
-          </div> */}
         </div>
       </div>
     </main>
