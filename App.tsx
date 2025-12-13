@@ -1,23 +1,25 @@
-
 import React, { useState } from 'react';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { DosenDashboardPage } from './pages/dosen/DosenDashboardPage';
+import { KaprodiDashboardPage } from './pages/kaprodi/KaprodiDashboardPage';
+import { BAADashboardPage } from './pages/baa/BAADashboardPage';
+import { DekanDashboardPage } from './pages/dekan/DekanDashboardPage';
 import type { User } from './types';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
 
-  // Fungsi ini akan dipanggil oleh LoginPage setelah login berhasil
   const handleLogin = (role: User['role']) => {
-    if (role === 'dosen') {
-      setUser({ name: 'Sir Jay Sihotang', role: 'dosen' });
-    } else {
-      setUser({ name: 'Andrew Simbolon', role: 'mahasiswa' });
-    }
+    const mockUsers: Record<User['role'], User> = {
+      mahasiswa: { id: 'student-1', name: 'Andrew Simbolon', email: 'andrew@student.com', role: 'mahasiswa' },
+      kaprodi: { id: 'kaprodi-1', name: 'Dr. Amelia Sari', email: 'kaprodi@unai.edu', role: 'kaprodi', study_program_id: 'prog-ti' },
+      baa: { id: 'baa-1', name: 'Dr. Hendra Gunawan', email: 'baa@unai.edu', role: 'baa' },
+      dekan: { id: 'dekan-1', name: 'Prof. Sri Mulyani', email: 'dekan@unai.edu', role: 'dekan' }
+    };
+
+    setUser(mockUsers[role]);
   };
-  
-  // Fungsi untuk logout
+
   const handleLogout = () => {
     setUser(null);
   };
@@ -30,8 +32,12 @@ const App: React.FC = () => {
     switch(user.role) {
       case 'mahasiswa':
         return <DashboardPage user={user} onLogout={handleLogout} />;
-      case 'dosen':
-        return <DosenDashboardPage user={user} onLogout={handleLogout} />;
+      case 'kaprodi':
+        return <KaprodiDashboardPage user={user} onLogout={handleLogout} />;
+      case 'baa':
+        return <BAADashboardPage user={user} onLogout={handleLogout} />;
+      case 'dekan':
+        return <DekanDashboardPage user={user} onLogout={handleLogout} />;
       default:
          return <LoginPage onLogin={handleLogin} />;
     }

@@ -27,9 +27,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout }) 
             case 'home':
                 return <DashboardHomePage user={user} onNavigate={handleNavigate} />;
             case 'request':
-                return <ConversionRequestPage />;
+                return <ConversionRequestPage user={user} />;
             case 'history':
-                return <ConversionHistoryPage />;
+                return <ConversionHistoryPage user={user} />;
             default:
                 return <DashboardHomePage user={user} onNavigate={handleNavigate} />;
         }
